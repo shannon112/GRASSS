@@ -1,5 +1,12 @@
 from .utils import *
 
+def dollar_cost_averaging(
+    df, start_date, end_date, fixed_buys
+):
+    df = df['Close']
+    trades = grep_valid_trades_monthly(df, start_date, end_date, fixed_buys)
+    return execute_trades(df, trades)
+
 def fubon_dollar_cost_averaging(
     df, money_date06, money_date16, money_date26
 ):
@@ -8,18 +15,14 @@ def fubon_dollar_cost_averaging(
 # each time buy the stock, handling fee = 1
 # options: 06, 16, 26. You're allowed to bonus 1 times.
 # need to support dividends in the future (bought before X date you can get it)
-    start_date = df.index[0]
-    end_date = df.index[-1]
-
     #df_dividends = df[df['Dividends'] > 0]
     #print(df_dividends)
 
-    df = df['Close']
-    trades = []
-    if money_date06 > 0:
-        trades.extend(grep_monthly_valid_trade(df, start_date, end_date, 6, money_date06))
-    if money_date16 > 0:
-        trades.extend(grep_monthly_valid_trade(df, start_date, end_date, 16, money_date06))
-    if money_date26 > 0:
-        trades.extend(grep_monthly_valid_trade(df, start_date, end_date, 26, money_date06))
-    return execute_trades(df, trades)
+    start_date = df.index[0]
+    end_date = df.index[-1]
+
+    fixed_buys = []
+    if money_date06 > 0: fixed_buys.append(FixedBuy(6, money_date06))
+    if money_date16 > 0: fixed_buys.append(FixedBuy(16, money_date16))
+    if money_date26 > 0: fixed_buys.append(FixedBuy(26, money_date26))
+    return dollar_cost_averaging(df, start_date, end_date, fixed_buys)

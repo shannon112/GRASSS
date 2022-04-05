@@ -23,7 +23,7 @@ fubon_contracted_stock_ids = [
     '8046', '8299', '8454', '9904', '9910', '9921', '9945',
 ]
 
-my_interested_stock_ids = ['2330', '2303', '2454', '2379', '3034'] 
+my_interested_stock_ids = ['0050', '2330', '2454', '2379', '3034', '2884', '2885', '2892'] 
 test_stock_ids = ['2330', '2454'] 
 
 def gen_stock_name_list(id_list):
