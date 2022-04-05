@@ -1,44 +1,31 @@
 import pandas as pd
 import math
 from .mystock import MyStock
+from .mytrade import MyTrade
 
-def buy_fixed_money_on_dates(
-    df, dates, money
-):
+def execute_trades(df, trades):
     my_stock = MyStock()
-    for buy_date in dates:
-        current_price = df.loc[buy_date]
-        current_quantity = math.floor(money/current_price)
+    for trade in trades:
+        current_price = df.loc[trade.date]
+        current_quantity = math.floor(trade.money/current_price)
         current_cost = current_price*current_quantity
         current_stock = MyStock("", current_price, current_quantity, current_cost)
         my_stock.combine(current_stock)
     return my_stock
 
-def combine_bought_stocks(
-    mystocks
-):
-    my_stock = MyStock()
-    for mystock in mystocks:
-        my_stock.combine(mystock)
-    return my_stock
-
-def grep_monthly_valid_tradedate(df, start_date, end_date, the_date_day):
-    dates = []
+def grep_monthly_valid_trade(df, start_date, end_date, the_date_day, money):
+    my_trades = []
     current_date = pd.Timestamp(start_date.year, start_date.month, the_date_day)
     assert start_date<current_date
     while(1):
         if current_date > end_date: break
-        if current_date in df.index: 
-            dates.append(current_date)
-            current_date = current_date + pd.DateOffset(months=1)
-            current_date = pd.Timestamp(current_date.year, current_date.month, the_date_day)
-        else:
-            current_date = current_date + pd.Timedelta("1 day")
-    return dates
+        my_trades.append(grep_valid_trade(df, current_date, money))
+        current_date = current_date + pd.DateOffset(months=1)
+    return my_trades
 
-def grep_valid_tradedate(df, the_date):
-    while(1):
-        if the_date in df.index: 
-            return the_date
-        else:
-            the_date = the_date + pd.Timedelta("1 day")
+def grep_valid_trade(df, the_date, money):
+    valid_dates = df.index[df.index>=the_date]
+    if len(valid_dates) > 0:
+        the_date = valid_dates[0]
+        return MyTrade(the_date, money)
+    return MyTrade(the_date, 0)

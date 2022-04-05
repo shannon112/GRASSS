@@ -10,12 +10,12 @@ import argparse
 
 # options
 parser = argparse.ArgumentParser(description='Process some integers.')
-parser.add_argument('--start', default=2014, help='start year')
+parser.add_argument('--start', default=2019, help='start year')
 parser.add_argument('--end', default=2021, help='end year')
 parser.add_argument('--current', default=2022, help='current year')
-parser.add_argument('--gaps', default=3, help='gap year ranges')
+parser.add_argument('--gaps', default=1, help='gap year ranges, min=1')
 args = parser.parse_args()
-stock_list = fubon_contracted_stock_ids
+stock_list = test_stock_ids
 
 # create table
 table = pd.DataFrame(columns=stock_list)

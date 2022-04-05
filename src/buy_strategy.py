@@ -15,16 +15,11 @@ def fubon_dollar_cost_averaging(
     #print(df_dividends)
 
     df = df['Close']
-    my_stocks = []
-
+    trades = []
     if money_date06 > 0:
-        dates = grep_monthly_valid_tradedate(df, start_date, end_date, 6)
-        my_stocks.append(buy_fixed_money_on_dates(df, dates, money_date06))
+        trades.extend(grep_monthly_valid_trade(df, start_date, end_date, 6, money_date06))
     if money_date16 > 0:
-        dates = grep_monthly_valid_tradedate(df, start_date, end_date, 16)
-        my_stocks.append(buy_fixed_money_on_dates(df, dates, money_date06))
+        trades.extend(grep_monthly_valid_trade(df, start_date, end_date, 16, money_date06))
     if money_date26 > 0:
-        dates = grep_monthly_valid_tradedate(df, start_date, end_date, 26)
-        my_stocks.append(buy_fixed_money_on_dates(df, dates, money_date06))
-    total = combine_bought_stocks(my_stocks)
-    return total
+        trades.extend(grep_monthly_valid_trade(df, start_date, end_date, 26, money_date06))
+    return execute_trades(df, trades)
