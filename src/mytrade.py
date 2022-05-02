@@ -3,6 +3,7 @@ class MyTrade:
         self.date = date
         self.money = money
 
+
 class FixedBuy:
     def __init__(self, day=1, money=0.0):
         self.day = day
