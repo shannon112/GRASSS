@@ -23,7 +23,7 @@ parser.add_argument("--end", default=2021, help="end year")
 parser.add_argument("--current", default=2022, help="current year")
 parser.add_argument("--gaps", default=1, help="gap year ranges, min=1")
 args = parser.parse_args()
-stock_list = my_interested_stock_ids
+stock_list = fubon_contracted_stock_ids
 
 # create table
 table = pd.DataFrame(columns=stock_list)
@@ -61,7 +61,7 @@ for gap in range(args.gaps):
 
             # compute data
             bought_stock = fubon_dollar_cost_averaging(
-                stock_history_buy, 6000, 6000, 6000
+                stock_id, stock_history_buy, 0, 0, 5000
             )
             benefit_percentage = sell_all_at_once(stock_history_sell, bought_stock)
             this_year_benefit[-1] = benefit_percentage

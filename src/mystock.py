@@ -139,15 +139,13 @@ fubon_contracted_stock_ids = [
 ]
 
 my_interested_stock_ids = [
-    "0050",
-    "2330",
-    "2454",
-    "2379",
-    "3034",
-    "2884",
-    "2885",
-    "2892",
+    "0050",  # Taiwan50
+    "2330",  # TSMC
+    "2454",  # MediaTek
+    "2379",  # RealTek
+    "3034",  # NovaTek
 ]
+
 test_stock_ids = ["2330", "2454"]
 
 
@@ -165,15 +163,18 @@ def get_stock_name(id):
 
 
 class MyStock:
-    def __init__(self, id="", price=0.0, quantity=0, cost=0.0, dividend=0.0):
+    def __init__(self, id="", price=0.0, quantity=0, cost=0.0, dividends=0.0):
         self.id = id  # str
         self.price = price
         self.quantity = quantity
         self.cost = cost
-        self.dividend = dividend
+        self.dividends = dividends
+
+    def str_info(self):
+        return f"{self.id} {self.price} {self.quantity} {self.cost} {self.dividends}"
 
     def print_info(self):
-        print(self.id, self.price, self.quantity, self.cost, self.dividend)
+        print(self.id, self.price, self.quantity, self.cost, self.dividends)
 
     def combine(self, combined_stock):
         assert self.id == combined_stock.id

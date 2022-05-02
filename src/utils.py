@@ -1,25 +1,34 @@
 import math
+from collections import deque
 
 import pandas as pd
 
 from .mystock import MyStock
-from .mytrade import FixedBuy, MyTrade
+from .mytrade import FixedBuy, MyDividends, MyTrade
 
 
-def execute_trades(df, trades):
-    my_stock = MyStock()
+def execute_trades(stock_id, df, dividends, trades):
+    my_stock = MyStock(stock_id)
     for trade in trades:
         if trade.money == 0:
             continue
-        current_price = df.loc[trade.date]
+        if len(dividends) and (dividends[0].date < trade.date):
+            my_stock.dividends += dividends[0].dividends * my_stock.quantity
+            print(f"{dividends[0].date} dividends {my_stock.dividends}")
+            dividends.popleft()
+        current_price = df.loc[trade.date]["Close"]
         current_quantity = math.floor(trade.money / current_price)
         current_cost = current_price * current_quantity
-        current_stock = MyStock("", current_price, current_quantity, current_cost)
+        current_stock = MyStock(stock_id, current_price, current_quantity, current_cost)
+        print(f"{trade.date} buying {current_stock.str_info()}")
         my_stock.combine(current_stock)
     return my_stock
 
 
-def grep_valid_trades_monthly(df, start_date, end_date, fixed_trades):
+def grep_valid_trades_monthly(df, fixed_trades):
+    df = df["Close"]
+    start_date = df.index[0]
+    end_date = df.index[-1]
     my_trades = []
     current = pd.Timestamp(start_date.year, start_date.month, 1)
     while current < end_date:
@@ -38,3 +47,11 @@ def grep_valid_trade(df, the_date, money):
         the_date = valid_dates[0]
         return MyTrade(the_date, money)
     return MyTrade(the_date, 0)
+
+
+def grep_valid_dividends(df):
+    my_dividends = deque()
+    df_dividends = df[df["Dividends"] > 0]
+    for date in df_dividends.index:
+        my_dividends.append(MyDividends(date, df_dividends["Dividends"].loc[date]))
+    return my_dividends
