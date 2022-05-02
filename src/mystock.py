@@ -144,6 +144,8 @@ my_interested_stock_ids = [
     "2454",  # MediaTek
     "2379",  # RealTek
     "3034",  # NovaTek
+    "2885",  # 元大金
+    "2886",  # 兆豐金
 ]
 
 test_stock_ids = ["2330", "2454"]
